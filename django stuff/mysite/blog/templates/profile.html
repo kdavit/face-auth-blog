@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block content %}
+{% load crispy_forms_tags %}
+<div id="profile">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mb-4  mt-3 left  top">
+                <img class="profile-pic" src="{{ user.profile.image.url }}" alt="">
+                <h1>{{ user.username }}</h1>
+                <p>{{ user.email }}</p>
+            </div>
+            <form method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h3><b>Profile</b></h3>
+
+                {{ u_form | crispy }}
+                {{ p_form | crispy }}
+
+                <input type="text" name="user_image" value="{{ user.profile.image.name }}" hidden>
+
+                <button class="btn submit" type="submit">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
