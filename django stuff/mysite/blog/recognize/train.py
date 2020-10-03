@@ -40,8 +40,7 @@ def get_encodings():
     return encodings, persons
 
 
-def train_knn(knn_algo='ball_tree'):
-    encodings, persons = get_encodings()
+def train_knn(encodings, persons, path, knn_algo='ball_tree'):
 
     # Determine how many neighbors to use for weighting in the KNN classifier
     n_neighbors = int(round(math.sqrt(len(encodings))))
@@ -50,7 +49,9 @@ def train_knn(knn_algo='ball_tree'):
     knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
     knn_clf.fit(encodings, persons)
 
-    save_clf(knn_clf, 'knn')
+    if path is not None:
+        with open(path, 'wb') as f:
+            pickle.dump(knn_clf, f)
 
     return knn_clf
 
@@ -84,7 +85,7 @@ def read_encodings():
         return encodings, persons
 
 
-def delete_enc(encodings, persons, person, img_path):
+def delete_enc(encodings, persons, person):
     # delete person from persons and also its encodings
     p_index = persons.index(person)
     encodings.pop(p_index)
@@ -102,7 +103,7 @@ def retrain(img_path, person, knn_algo='ball_tree'):
     encodings, persons = read_encodings()
 
     if persons.count(person) + 1 >= 4:
-        encodings, persons = delete_enc(encodings, persons, person, img_path)
+        encodings, persons = delete_enc(encodings, persons, person)
 
     # train for new picture
     if img_path:

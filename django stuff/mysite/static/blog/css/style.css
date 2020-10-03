@@ -87,7 +87,7 @@ input:focus {
     margin: auto;
 }
 
-#login .submit, #signup .submit {
+#login .submit, #signup .submit, #profile .submit {
     margin-top: 10px;
     background: #3498DB;
     color: #ffffff;
@@ -106,4 +106,13 @@ input:focus {
 
 #signup .container {
     padding-top: 5%;
+}
+
+
+.error {
+    color: red;
+}
+
+.post-image {
+    width: 100%;
 }

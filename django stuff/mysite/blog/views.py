@@ -47,8 +47,12 @@ def sign_up(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        if User.objects.get(username=username):
-            return redirect('/')
+        # if user is taken
+        if User.objects.filter(username=username).exists():
+            return render(request, 'auth/signup.html', {'user_taken': 'This Username is already taken.'})
+        # if mail is taken
+        if User.objects.filter(email=email).exists():
+            return render(request, 'auth/signup.html', {'email_taken': 'This Email is already taken'})
 
         user = User.objects.create_user(username, email, password)
         user.first_name = name
@@ -57,9 +61,18 @@ def sign_up(request):
 
         if user is not None:
             login(request, user)
-            return render(request, 'profile.html', {"user": user})
+
+            u_form = UserUpdateForm(instance=user)
+            p_form = ProfileUpdateForm(instance=user.profile)
+
+            context = {
+                "user": user,
+                "u_form": u_form,
+                "p_form": p_form,
+            }
+            return render(request, 'profile.html', context)
         else:
-            return redirect('/')
+            return render(request, 'auth/signup.html', {'unseen_error': 'Sorry you could not be registered :('})
     else:
         return render(request, 'auth/signup.html')
 
@@ -71,9 +84,18 @@ def log_in(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return render(request, 'profile.html', {"user": user})
+
+            u_form = UserUpdateForm(instance=user)
+            p_form = ProfileUpdateForm(instance=user.profile)
+
+            context = {
+                "user": user,
+                "u_form": u_form,
+                "p_form": p_form,
+            }
+            return render(request, 'profile.html', context)
         else:
-            return redirect('/')
+            return render(request, 'auth/login.html', {"message": "Invalid Username or Password!"})
     else:
         return render(request, 'auth/login.html')
 

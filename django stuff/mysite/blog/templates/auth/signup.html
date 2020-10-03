@@ -9,17 +9,20 @@
 
                 <h3><b>Register</b></h3>
 
-                <input type="text" placeholder="username" name="username" required>
+                <span class="error">{{ user_taken }}</span>
+                <input type="text" placeholder="username" name="username" required pattern=".{6,}" title="At least 6 characters">
 
                 <input type="text" placeholder="name" name="name" required>
 
                 <input type="text" placeholder="surname" name="surname" required>
 
-                <input type="text" placeholder="email" name="email" required>
+                <span class="error">{{ email_taken }}</span>
+                <input type="text" placeholder="email" name="email" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,26}$">
 
                 <input type="password" placeholder="password" name="password" required>
 
                 <input type="submit" value="Submit" class="submit">
+                <span class="error">{{ unseen_error }}</span>
             </form>
         </div>
     </div>

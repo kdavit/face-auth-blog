@@ -8,7 +8,7 @@
         <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
         <h1 class="card-text ">{{ post.title }}</h1>
         {% if post.image %}
-          <img src="{{ post.image.url }}" alt="">
+          <img src="{{ post.image.url }}" alt="" class="post-image">
         {% endif %}
         <p class="card-text ">{{ post.content | safe | escape }}</p>
         <!--<p class="card-text ">{{ object.content | safe }}</p>-->
