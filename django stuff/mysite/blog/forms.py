@@ -7,7 +7,12 @@ from .models import Profile
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('name', 'email', 'body')
+        fields = ('body',)
+
+        widgets = {
+            'name': forms.HiddenInput(),
+            'email': forms.HiddenInput()
+        }
 
 
 class UserUpdateForm(forms.ModelForm):

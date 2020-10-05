@@ -48,7 +48,6 @@ nav .navbar-brand {
 
 
 input {
-    text-align: center;
     background-color: #ECF0F1;
     border: 2px solid transparent;
     border-radius: 3px;
@@ -61,7 +60,17 @@ input {
     margin-bottom: 20px;
 }
 
-input:focus {
+textarea {
+    background-color: #ECF0F1;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    font-weight: 200;
+    transition: border .5s;
+}
+
+input:focus, textarea:focus {
     outline: none !important;
     border: 2px solid #3498DB;
     box-shadow: none;

@@ -78,6 +78,6 @@ def face_auth(request):
 
             return render(request, 'profile.html', context)
         else:
-            return redirect('/')
+            return redirect('/log-in')
     else:
-        return redirect('/')
+        return redirect('/log-in')

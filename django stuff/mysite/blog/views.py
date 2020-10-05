@@ -22,10 +22,16 @@ def post_detail(request, slug):
     # Comment posted
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
+        # comment_form.cleaned_data['name'] = request.user.username
+        # comment_form.cleaned_data['email'] = request.user.email
+
         if comment_form.is_valid():
 
             # Create Comment object but don't save to database yet
             new_comment = comment_form.save(commit=False)
+
+            new_comment.name = request.user.username
+            new_comment.email = request.user.email
             # Assign the current post to the comment
             new_comment.post = post
             # Save the comment to the database

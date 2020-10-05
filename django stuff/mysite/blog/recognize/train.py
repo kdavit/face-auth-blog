@@ -102,7 +102,8 @@ def delete_enc(encodings, persons, person):
 def retrain(img_path, person, knn_algo='ball_tree'):
     encodings, persons = read_encodings()
 
-    if persons.count(person) + 1 >= 4:
+    # if user has more than 10 images delete rest of them
+    if persons.count(person) + 1 >= 10:
         encodings, persons = delete_enc(encodings, persons, person)
 
     # train for new picture

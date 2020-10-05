@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -31,7 +33,7 @@ class Comment(models.Model):
     name = models.CharField(max_length=80)
     email = models.EmailField()
     body = models.TextField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=datetime.datetime.now)
     active = models.BooleanField(default=False)
 
     class Meta:

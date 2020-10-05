@@ -28,6 +28,7 @@
         {% endfor %}
       </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="col-md-8 card mb-4  mt-3 ">
       <div class="card-body">
         {% if new_comment %}
@@ -44,6 +45,14 @@
         {% endif %}
       </div>
     </div>
+
+    {% else %}
+    <div class="col-md-8 mb-4  mt-3 ">
+      <span>Wanna comment? <a href="/log-in">Log In</a></span>
+    </div>
+
+    {% endif %}
+
   </div>
 </div>
 {% endblock comment %}
