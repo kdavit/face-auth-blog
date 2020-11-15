@@ -30,12 +30,16 @@
       <a href="{% url 'log_out' %}" class="log-out" style="margin-right: 15px">Log Out</a>
       <a href="{% url 'profile' %}" class="profile">Profile</a>
       {% else %}
-      <a href="{% url 'face_auth' %}" class="face-rec" style="margin-right: 15px">Face-auth</a>
+      <!--href="{% url 'face_auth' %}"-->
+      <a id="play" class="face-rec" style="margin-right: 15px">Face-auth</a>
       <a href="/log-in" class="log-in" style="margin-right: 15px">Log In</a>
       <a href="{% url 'sign_up' %}" class="sign-up">Sign Up</a>
       {% endif %}
   </div>
 </nav>
+        <video id="webcam" autoplay muted playsinline width="720" height="560"></video>
+        <canvas id="canvas" width="720" height="560"></canvas>
+        <a href="" id="download-photo" download>photo</a>
 
         {% block content %}
         <!-- Content Goes here -->
@@ -46,11 +50,75 @@
         </footer>
 
         <!-- JS, Popper.js, and jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-webcam/1.0.0/jquery.webcam.min.js" integrity="sha512-bTfNSUABHISn7mcOc9mM5xDipX1v7qcfilknueD19cxJ0gTO2/Y2iIByraL01gzsHarb5jyzbgKplvYPAXhnmg==" crossorigin="anonymous"></script>-->
+        <script src="{% static 'blog/js/face-api.min.js' %}"></script>
+        <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
         <script src="{% static 'blog/js/auth.js' %}"></script>
+
+
+        <script>
+            $( document ).ready(function() {
+                $('.face-rec').click(function(e){
+                    e.preventDefault();
+                    console.log("kilk");
+                    $.ajax({
+                        url: '{% url "face_auth" %}',
+                        data: {
+                          'madara': "MADARA",
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                          if (data.success) {
+                            alert("A user with this username already exists.");
+                          }
+                        }
+                    });
+                });
+
+                const video = document.getElementById('webcam');
+                const canvasElement = document.getElementById('canvas');
+                const webcam = new Webcam(video, 'user', canvasElement);
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+                ])
+
+                async function playVideo() {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = stream
+                }
+
+                $('#play').click(function() {
+                  playVideo();
+                })
+
+                video.addEventListener('play', (e) => {
+                  const canvas = faceapi.createCanvasFromMedia(video)
+                  document.body.append(canvas)
+                  const displaySize = { width: video.width, height: video.height }
+                  faceapi.matchDimensions(canvas, displaySize)
+
+                setInterval(async () => {
+                  const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                  const resizedDetections = faceapi.resizeResults(detections, displaySize)
+                  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+                  faceapi.draw.drawDetections(canvas, resizedDetections)
+
+                  if (detections.length != 0) {
+                    var context = document.getElementById('canvas').getContext('2d')
+                    context.drawImage(video, 0, 0, 720, 560)
+                    var shmanvas = document.getElementById('canvas')
+                    $("#canvas").hide();
+                      var img = shmanvas.toDataURL("image/jpeg");
+                      $('#download-photo').attr('href', img);
+                      video.pause();
+                  }
+                  })
+                }, 100)
+            });
+        </script>
+
     </body>
 </html>

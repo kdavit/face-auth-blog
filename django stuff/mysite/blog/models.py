@@ -49,7 +49,7 @@ def upload_to(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.png.', upload_to=upload_to)
+    image = models.ImageField(default='default.png', upload_to=upload_to)
 
     def __str__(self):
         return f'{self.user.username} Profile'
