@@ -5,6 +5,9 @@ from .models import Post
 from .forms import CommentForm, UserUpdateForm, ProfileUpdateForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .recognize import train
+import logging
+
+logger = logging.getLogger('django.request')
 
 
 class PostList(generic.ListView):
@@ -18,6 +21,8 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     comments = post.comments.filter(active=True)
     new_comment = None
+
+    logger.debug("detail debug")
 
     # Comment posted
     if request.method == 'POST':
@@ -46,6 +51,7 @@ def post_detail(request, slug):
 
 
 def sign_up(request):
+    logger.debug("signup debug")
     if request.method == 'POST':
         username = request.POST['username']
         name = request.POST['name']
